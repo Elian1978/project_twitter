@@ -1,9 +1,8 @@
 module Api
     class TweetsController < ApplicationController
-        include ActionController::HttpAuthentication::Basic::ControllerMethods 
-        http_basic_authenticate_with name: "hello", password: "world", except: :index
+     
         before_action :set_tweet, only: [:show, :update, :destroy]
-        skip_before_action :verify_authenticity_token
+       
 
       respond_to :json
 
