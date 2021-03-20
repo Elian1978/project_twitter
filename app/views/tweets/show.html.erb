@@ -2,7 +2,10 @@
 
 <div class="container">
 
-<p id="notice"><%= notice %></p>
+<div class="container text-center">
+  <p id="notice"><%= notice %></p>
+</div>
+
 
 <!-- Show Tweet main card -->
 
@@ -14,7 +17,21 @@
         <% if @tweet.retweet.present? %>
           <p><i>Retweeted from <%= Tweet.find(@tweet.retweet_id).user.username %></i></p>
         <% end %>
-        <p class="card-text"><%= @tweet.content %></p>
+
+
+        <% words = @tweet.content.split(" ") %>
+          <% edited_words = [] %>
+          <% words.each do |word| %>
+          <% if word.first == "#" %>
+            <% word = link_to word, controller: "tweets", query: word %>
+          <% end %>
+
+          <% edited_words.push(word) %>
+
+        <% end %>
+
+        <p class="card-text"><%= raw edited_words.join(" ") %></p>
+
         <p><%= time_ago_in_words(@tweet.created_at) %> ago</p>
         <p>Likes: <%= @tweet.likes.count %> | Retweets: <%= @tweet.retweets.count %></p>
 

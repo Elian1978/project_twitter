@@ -65,23 +65,24 @@ class TweetsController < ApplicationController
     tweet = @tweet.retweets.build(user_id: current_user.id, content: @tweet.content)
 
     if tweet.save
-      redirect_to root_path
+      redirect_to homes_index_path
     end
   end
 
   # PATCH/PUT /tweets/1 or /tweets/1.json
   def update
 
-    @tweet.content = :content
-    @tweet.user_id = params[:id]
-
-    respond_to do |format|
-      if @tweet.update
-        format.html { redirect_to homes_index_path, notice: "Tweet was successfully updated." }
-        format.json { render :show, status: :ok, location: @tweet }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @tweet.errors, status: :unprocessable_entity }
+    def update
+      if @tweet.user.id == current_user.id
+        respond_to do |format|
+          if @tweet.update(tweet_params)
+            format.html { redirect_to @tweet, notice: 'Tweet was successfully updated.' }
+            format.json { render :show, status: :ok, location: @tweet }
+          else
+            format.html { render :edit }
+            format.json { render json: @tweet.errors, status: :unprocessable_entity }
+          end
+        end
       end
     end
   end
@@ -103,6 +104,6 @@ class TweetsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def tweet_params
-      params.require(:tweets).permit(:content, :user_id)
+      params.require(:tweet).permit(:content)
     end
 end

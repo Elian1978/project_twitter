@@ -25,8 +25,6 @@ class LikesController < ApplicationController
   # POST /likes or /likes.json
   def create
 
-
-
     if @tweet.likes.where(user_id: current_user.id).count === 0
 
       @like = Like.create(tweet_id: @tweet.id, user_id: current_user.id)
@@ -36,7 +34,7 @@ class LikesController < ApplicationController
         like.delete
       end
     end      
-    redirect_to(root_path)
+    redirect_back(fallback_location: root_path)
   end
 
   # PATCH/PUT /likes/1 or /likes/1.json
